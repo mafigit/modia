@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+          <head>
+            <title>gameQuery - Tutorial 1 - Final result</title>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+            <script type="text/javascript" src="jquery.gamequery.js"></script>
+            <script type="text/javascript" src="game.js"></script>
+            <style type="text/css">
+              html,body{
+                margin: 0;
+                padding: 0;
+                background: white;
+              }
+              #welcomeScreen{
+                width: 700px; 
+                height: 250px; 
+                position: absolute; 
+                z-index: 100; 
+                background-image: url(logo.png); 
+                font-family: verdana, sans-serif;
+              }
+              #loadingBar{
+                position: relative;
+                left: 100px; 
+                height: 15px; 
+                width: 0px; 
+                background: red;
+              }
+            </style>
+          </head>
+          <body>
+          <div id="playground" style="width: 1280; height: 1000; background: black;">
+            <div id="welcomeScreen">
+              <div style="position: absolute; top: 120px; width: 700px; color: white;">
+                <div id="loadingBar" ></div><br />
+                <center><a style="cursor: pointer;" id="startbutton">
+                  Click here to start!
+                </a></center>
+              </div>
+            </div>
+          </div>
+          <div id='output' style='position: absolute; top: 365px; left: 700px; z-index: 10000;width:300px; height:300px;background: white;'></div>
+          <div id='left_stick' style='position: absolute; top: 620px; left: 100px; z-index: 10000;width:40px; height:40px;background: green;'></div>
+          <div id='right_button' style='position: absolute; top: 620px; left: 100px; z-index: 10000;width:40px; height:40px;background: green;'></div>
+          </body>
+        </html>
