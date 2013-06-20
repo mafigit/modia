@@ -2,7 +2,7 @@
         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
           <head>
             <title>gameQuery - Tutorial 1 - Final result</title>
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+            <script src="jquery.min.js"></script>
             <script type="text/javascript" src="jquery.gamequery.js"></script>
             <script type="text/javascript" src="game.js"></script>
             <style type="text/css">
@@ -39,8 +39,8 @@
               </div>
             </div>
           </div>
-          <div id='output' style='position: absolute; top: 365px; left: 700px; z-index: 10000;width:300px; height:300px;background: white;'></div>
-          <div id='left_stick' style='position: absolute; top: 620px; left: 100px; z-index: 10000;width:40px; height:40px;background: green;'></div>
-          <div id='right_button' style='position: absolute; top: 620px; left: 100px; z-index: 10000;width:40px; height:40px;background: green;'></div>
+          <div id='output' class='touch_ctrl' style='position: absolute; display:none; top: 0; left: 0; z-index: 10000;width:512px; height:645px;'></div>
+          <div id='left_stick' class='touch_ctrl' style='position: absolute; display:none; top: 500px; left: 100px; z-index: 10000;width:40px; height:40px;background: green;'></div>
+          <div id='right_button' class='touch_ctrl' style='position: absolute; display:none; top: 500px; left: 820px; z-index: 10000;width:40px; height:40px;background: green;'></div>
           </body>
         </html>

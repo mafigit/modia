@@ -1,71 +1,100 @@
 $(function() {
 
-  var player_anim_left = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_anim_left.png",
+  var player_anim_left = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_default.png",
     numberOfFrame: 8,
     delta: 64,
     rate: 40,
+    offsety: 128,
     type: $.gQ.ANIMATION_HORIZONTAL
   });
 
-  var player_anim_right = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_anim_right.png",
+  var player_anim_right = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_default.png",
     numberOfFrame: 8,
     delta: 64,
     rate: 40,
+    offsety: 192,
     type: $.gQ.ANIMATION_HORIZONTAL
   });
 
-  var player_anim_right_run = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_anim_right_run.png",
+  var player_anim_right_run = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_default.png",
     numberOfFrame: 8,
     delta: 64,
     rate: 40,
+    offsety: 320,
     type: $.gQ.ANIMATION_HORIZONTAL
   });
 
-  var player_anim_left_run = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_anim_left_run.png",
+  var player_anim_left_run = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_default.png",
     numberOfFrame: 8,
     delta: 64,
     rate: 40,
+    offsety: 256,
     type: $.gQ.ANIMATION_HORIZONTAL
   });
 
-  var player_anim_idle_left = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_anim_idle_left.png",
+  var player_anim_idle_left = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_default.png",
     numberOfFrame: 1,
     delta: 64,
     rate: 90,
+    offsety: 0,
     type: $.gQ.ANIMATION_HORIZONTAL
   });
 
-  var player_anim_idle_right = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_anim_idle_right.png",
+  var player_anim_idle_right = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_default.png",
     numberOfFrame: 1,
     delta: 64,
     rate: 90,
+    offsety: 64,
     type: $.gQ.ANIMATION_HORIZONTAL
   });
 
-  var player_anim_air_left = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_anim_air_left.png",
+  var player_anim_air_left = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_default.png",
     numberOfFrame: 2,
     delta: 64,
     rate: 90,
+    offsety: 384,
     type: $.gQ.ANIMATION_HORIZONTAL
   });
 
-  var player_anim_air_right = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_anim_air_right.png",
+  var player_anim_air_right = new $.gQ.Animation({ imageURL: "./sprites/player_default/player_default.png",
     numberOfFrame: 2,
     delta: 64,
     rate: 90,
+    offsety: 448,
     type: $.gQ.ANIMATION_HORIZONTAL
   });
 
-  var world_ground = new $.gQ.Animation({ imageURL: "./world_ground.png",
-    numberOfFrame: 1,
-    delta: 480,
-    rate: 90,
-    type: $.gQ.ANIMATION_HORIZONTAL
-  });
+// Generated with gQ's Tiles map editor
 
+var animations = [];
+animations[0] =  new $.gameQuery.Animation({
+    imageURL:      './sprites/world/grass_spirte.png',
+    type:          $.gameQuery.ANIMATION_HORIZONTAL,
+    numberOfFrame: 8,
+    delta:         64,
+    rate:          200,
+    offsetx:       0,
+    offsety:       0
+});
+
+
+ // the tilemap array
+var map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+
+// $('TODO:select the playground here').playground({height: 64, width: 350});
+$.playground()
   //start the game
-  $("#playground").playground({height: 700, width: 1024, refreshRate: 60,keyTracker: true})
-  .addSprite('ground',{animation: world_ground, height: 40, width: 480, posy: 300});
+  $("#playground").playground({height: 645, width: 1024, refreshRate: 60,keyTracker: true})
+  .addTilemap('tilemap', map,  animations, {width: 64, height: 64, sizex: 16, sizey: 10});
 
 
 
@@ -75,11 +104,17 @@ $(function() {
     max_speed: 18
   };
 
+  // touch controls
   var left_stick = {
     x: 0,
     y: 0
   }
 
+  var deviceAgent = navigator.userAgent.toLowerCase();
+  var agentID = deviceAgent.match(/(iphone|ipod|ipad|android)/);
+  if(agentID) {
+    $('.touch_ctrl').show();
+  }
   $('#output').bind('touchstart', function(e) {
     event.preventDefault();
     var orig = e.originalEvent
@@ -126,11 +161,10 @@ $(function() {
   $('#right_button').bind('touchend', function(e) {
     $.gQ.keyTracker[70] = false;
   });
- // $("#startbutton").click(function(){
-    $.playground().startGame(function(){
-      $("#welcomeScreen").remove();
-    });
-//  });
+
+  $.playground().startGame(function(){
+    $("#welcomeScreen").remove();
+  });
 
   function animate(player, anim) {
     if(player.current_animation != anim) {
@@ -219,7 +253,7 @@ $(function() {
       }
     };
     this.update = function() {
-      if($('#player' + _self.id).collision('#ground').length > 0 && _self.speed != -20) {
+      if($('#player' + _self.id).collision().length > 0 && _self.speed != -20) {
         _self.air = false;
         _self.speed = 0;
       }
