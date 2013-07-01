@@ -91,6 +91,10 @@ var map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
 // $('TODO:select the playground here').playground({height: 64, width: 350});
+//
+// start of socket connection
+socket = io.connect("http://192.168.5.38", {port: 3000, transports: ["websocket"]});
+
 $.playground()
   //start the game
   $("#playground").playground({height: 645, width: 1024, refreshRate: 60,keyTracker: true})
@@ -253,7 +257,7 @@ $.playground()
       }
     };
     this.update = function() {
-      if($('#player' + _self.id).collision().length > 0 && _self.speed != -20) {
+      if($('#player' + _self.id).collision("#tilemap,.gQ_tileType_0").length > 0 && _self.speed != -20) {
         _self.air = false;
         _self.speed = 0;
       }
@@ -272,13 +276,67 @@ $.playground()
     })();
   };
 
-//  function update_players() {
-//    $.each(players, function() {
-//      this.update();
-//    });
-//  }
+  var remotePlayer = function(id, spawnX, spawnY) {
+    var X = spawnX;
+    var Y = spawnY;
+    var id = id;
+    var setX = function(newX) {
+      X = newX;
+    };
+    var setY = function(newY) {
+      Y = newY;
+    };
+    var getX = function() {
+      return X;
+    };
+    var getY = function() {
+      return Y;
+    };
+    return {
+      setY: setY,
+      setX: setX,
+      getX: getX,
+      getY: getY,
+      id: id
+    }
+  };
+
+  var remotePlayers = [];
+  socket.emit('get players');
+  function server_update() {
+    socket.emit("move player", {x: myplayer.x,  y: myplayer.y});
+  };
+
+  socket.on('update move', function (data) {
+    $.each(remotePlayers, function() {
+      if(data.id == this.id) {
+        $('#player' + data.id).x(data.x);
+        $('#player' + data.id).y(data.y);
+      }
+    });
+  });
+
+  socket.on('remove player', function(data) {
+    remotePlayers.splice(remotePlayers.indexOf(data), 1);
+    $("#player" + data.id).remove();
+  });
+
+  socket.on('get players', function (data) {
+    $.each(data, function() {
+      var newPlayer = new remotePlayer(this.id, this.x, this.y);
+      remotePlayers.push(newPlayer);
+      $.playground().addSprite('player' + this.id,{animation: player_anim_idle_right, height: 64, width: 64, posx: this.x, posy: this.y});
+    });
+  });
+
+  socket.on('new player', function (data) {
+    var newPlayer = new remotePlayer(data.id, data.x, data.y);
+    remotePlayers.push(newPlayer);
+    $.playground().addSprite('player' + data.id,{animation: player_anim_idle_right, height: 64, width: 64, posx: data.x, posy: data.y});
+  });
 
   var myplayer =  new Player(1,0,0);
+  socket.emit("new player",{x: myplayer.x, y: myplayer.y});
 
   //player controls and main loop
   function keyboard_update () {
@@ -306,6 +364,7 @@ $.playground()
   $.playground().registerCallback(function(){
     keyboard_update();
     myplayer.update();
+    server_update();
   },World.refresh)
 
   //game ends here
