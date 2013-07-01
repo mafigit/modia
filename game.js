@@ -177,6 +177,32 @@ $.playground()
     }
   };
 
+  function remote_animate(data, anim) {
+    if(data.current_animation != anim) {
+      $('#player' + data.id).setAnimation(anim);
+      data.current_animation = anim;
+    }
+  };
+
+  function remote_player_state(data) {
+    switch(data.getState()) {
+      case 'go_left_normal':
+        remote_animate(data, player_anim_left);
+      break;
+      case 'go_right_normal':
+        remote_animate(data, player_anim_right);
+      break;
+      case 'idle':
+        if(data.getFacing() == 'right') {
+          remote_animate(data, player_anim_idle_right);
+        } else {
+          remote_animate(data, player_anim_idle_left);
+        }
+
+      break;
+    };
+  };
+
   function player_state(player, state) {
     switch(state) {
       case 'go_left_normal':
@@ -229,10 +255,10 @@ $.playground()
     this.state = 'idle_right';
     this.facing = 'right'
     this.current_animation = player_anim_idle_left;
-    //states: 0 == idle(default), 1 == move_left, 2 == move_right, 3 == jump;
     this.left = function() {
       player_state(_self, 'go_left_normal');
       _self.facing = 'left';
+      _self.state = 'go_left_normal';
       if($.gQ.keyTracker[68]) {
         _self.x = _self.x - 12;
       } else {
@@ -242,6 +268,7 @@ $.playground()
     this.right = function() {
       player_state(_self, 'go_right_normal');
       _self.facing = 'right';
+      _self.state = 'go_right_normal';
       if($.gQ.keyTracker[68]) {
         _self.x = _self.x + 12;
       } else {
@@ -250,6 +277,7 @@ $.playground()
     };
     this.idle = function() {
       player_state(_self, 'idle');
+      _self.state = 'idle';
     };
     this.jump = function() {
       if(_self.air == false) {
@@ -280,6 +308,25 @@ $.playground()
     var X = spawnX;
     var Y = spawnY;
     var id = id;
+
+    var current_animation = player_anim_idle_left;
+
+    var getState = function() {
+      return state;
+    };
+
+    var setState = function(newState) {
+      state =  newState;
+    };
+
+    var getFacing = function() {
+      return facing;
+    };
+
+    var setFacing = function(newFacing) {
+      facing = newFacing;
+    };
+
     var setX = function(newX) {
       X = newX;
     };
@@ -293,10 +340,15 @@ $.playground()
       return Y;
     };
     return {
+      setState: setState,
+      getState: getState,
+      getFacing: getFacing,
+      setFacing: setFacing,
       setY: setY,
       setX: setX,
       getX: getX,
       getY: getY,
+      current_animation: current_animation,
       id: id
     }
   };
@@ -304,7 +356,7 @@ $.playground()
   var remotePlayers = [];
   socket.emit('get players');
   function server_update() {
-    socket.emit("move player", {x: myplayer.x,  y: myplayer.y});
+    socket.emit("move player", {x: myplayer.x,  y: myplayer.y, state: myplayer.state, facing: myplayer.facing});
   };
 
   socket.on('update move', function (data) {
@@ -312,6 +364,9 @@ $.playground()
       if(data.id == this.id) {
         $('#player' + data.id).x(data.x);
         $('#player' + data.id).y(data.y);
+        this.setState(data.state);
+        this.setFacing(data.facing);
+        remote_player_state(this);
       }
     });
   });
