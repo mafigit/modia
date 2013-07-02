@@ -184,21 +184,33 @@ $.playground()
     }
   };
 
-  function remote_player_state(data) {
-    switch(data.getState()) {
+  function remote_player_state(remoteplayer) {
+    switch(remoteplayer.getState()) {
       case 'go_left_normal':
-        remote_animate(data, player_anim_left);
-      break;
-      case 'go_right_normal':
-        remote_animate(data, player_anim_right);
-      break;
-      case 'idle':
-        if(data.getFacing() == 'right') {
-          remote_animate(data, player_anim_idle_right);
+        if(remoteplayer.getAir()) {
+          remote_animate(remoteplayer, player_anim_air_left);
+        } else if(remoteplayer.getRunning()){
+          remote_animate(remoteplayer, player_anim_left_run);
         } else {
-          remote_animate(data, player_anim_idle_left);
+          remote_animate(remoteplayer, player_anim_left);
         }
 
+      break;
+      case 'go_right_normal':
+        if(remoteplayer.getAir()) {
+          remote_animate(remoteplayer, player_anim_air_right);
+        } else if(remoteplayer.getRunning()){
+          remote_animate(remoteplayer, player_anim_right_run);
+        } else {
+          remote_animate(remoteplayer, player_anim_right);
+        }
+      break;
+      case 'idle':
+        if(remoteplayer.getFacing() == 'right') {
+          remote_animate(remoteplayer, player_anim_idle_right);
+        } else {
+          remote_animate(remoteplayer, player_anim_idle_left);
+        }
       break;
     };
   };
@@ -209,8 +221,10 @@ $.playground()
         if(player.air) {
           animate(player, player_anim_air_left);
         } else if($.gQ.keyTracker[68]){
+          player.running = true;
           animate(player, player_anim_left_run);
         } else {
+          player.running = false;
           animate(player, player_anim_left);
         }
         break;
@@ -218,8 +232,10 @@ $.playground()
         if(player.air) {
           animate(player, player_anim_air_right);
         } else if($.gQ.keyTracker[68]){
+          player.running = true;
           animate(player, player_anim_right_run);
         } else {
+          player.running = false;
           animate(player, player_anim_right);
         }
         break;
@@ -252,6 +268,7 @@ $.playground()
     this.x = x;
     this.y = y;
     this.air = true;
+    this.running = false;
     this.state = 'idle_right';
     this.facing = 'right'
     this.current_animation = player_anim_idle_left;
@@ -308,8 +325,18 @@ $.playground()
     var X = spawnX;
     var Y = spawnY;
     var id = id;
+    var runinng = false;
+    var air = true;
 
     var current_animation = player_anim_idle_left;
+
+    var getAir = function() {
+      return air;
+    }
+
+    var setAir = function(newAir) {
+      air = newAir;
+    }
 
     var getState = function() {
       return state;
@@ -317,6 +344,14 @@ $.playground()
 
     var setState = function(newState) {
       state =  newState;
+    };
+
+    var setRunning = function(newRunning) {
+      running = newRunning;
+    };
+
+    var getRunning = function() {
+      return running;
     };
 
     var getFacing = function() {
@@ -342,8 +377,12 @@ $.playground()
     return {
       setState: setState,
       getState: getState,
+      setAir: setAir,
+      getAir: getAir,
       getFacing: getFacing,
       setFacing: setFacing,
+      getRunning: getRunning,
+      setRunning: setRunning,
       setY: setY,
       setX: setX,
       getX: getX,
@@ -356,7 +395,7 @@ $.playground()
   var remotePlayers = [];
   socket.emit('get players');
   function server_update() {
-    socket.emit("move player", {x: myplayer.x,  y: myplayer.y, state: myplayer.state, facing: myplayer.facing});
+    socket.emit("move player", {x: myplayer.x,  y: myplayer.y, state: myplayer.state, facing: myplayer.facing, running: myplayer.running, air: myplayer.air});
   };
 
   socket.on('update move', function (data) {
@@ -366,6 +405,8 @@ $.playground()
         $('#player' + data.id).y(data.y);
         this.setState(data.state);
         this.setFacing(data.facing);
+        this.setRunning(data.running);
+        this.setAir(data.air);
         remote_player_state(this);
       }
     });

@@ -14,6 +14,16 @@ var Player = function(spawnX, spawnY) {
   var id;
   var state = 'idle';
   var facing = 'right';
+  var running = false;
+  var air = true;
+
+  var getAir = function() {
+    return air;
+  };
+
+  var setAir = function(newAir) {
+    air = newAir;
+  }
 
   var getX = function() {
     return X;
@@ -24,7 +34,15 @@ var Player = function(spawnX, spawnY) {
   };
 
   var setState = function(newState) {
-    state =  newState;
+    state = newState;
+  };
+
+  var setRunning = function(newRunning) {
+    running = newRunning;
+  };
+
+  var getRunning = function() {
+    return running;
   };
 
   var getFacing = function() {
@@ -50,10 +68,14 @@ var Player = function(spawnX, spawnY) {
   var anim
 
   return {
+    setAir: setAir,
+    getAir: getAir,
     setState: setState,
     getState: getState,
     getFacing: getFacing,
     setFacing: setFacing,
+    setRunning: setRunning,
+    getRunning: getRunning,
     getX: getX,
     getY: getY,
     setX: setX,
@@ -114,17 +136,19 @@ function onNewPlayer(data) {
 };
 
 function onMovePlayer(data) {
-  var player = updatePlayer(this.id, data.x, data.y, data.state, data.facing);
-  this.broadcast.emit("update move", {id: this.id, x: data.x, y: data.y, state: data.state, facing: data.facing});
+  var player = updatePlayer(this.id, data.x, data.y, data.state, data.facing, data.running, data.air);
+  this.broadcast.emit("update move", {id: this.id, x: data.x, y: data.y, state: data.state, facing: data.facing, running: data.running, air: data.air});
 };
 
-function updatePlayer(player_id, data_x, data_y, state, facing) {
+function updatePlayer(player_id, data_x, data_y, state, facing, running, air) {
   for(i = 0; i < players.length; i++) {
    if(players[i].id == player_id) {
      players[i].setX(data_x);
      players[i].setY(data_y);
      players[i].setState(state);
      players[i].setFacing(facing);
+     players[i].setRunning(running);
+     players[i].setAir(air);
      return players[i];
    }
   }
