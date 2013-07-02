@@ -302,6 +302,9 @@ $.playground()
       }
     };
     this.update = function() {
+      if($('#player' + _self.id).collision(".gQ_sprite").length > 0) {
+        console.log("baaam!!");
+      }
       if($('#player' + _self.id).collision("#tilemap,.gQ_tileType_0").length > 0 && _self.speed != -20) {
         _self.air = false;
         _self.speed = 0;
