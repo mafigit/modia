@@ -10,7 +10,7 @@ $(function() {
   };
 
   preload(
-    './sprites/player_default/player_default.png'
+    '../sprites/player_default/player_default.png'
   );
   var animation_player = {
     player_anim_left : new $.gQ.Animation({ imageURL: pics[0].src,
@@ -82,7 +82,7 @@ $(function() {
 
 var animations = [];
 animations[0] =  new $.gameQuery.Animation({
-    imageURL:      './sprites/world/grass_spirte.png',
+    imageURL:      '../sprites/world/grass_spirte.png',
     type:          $.gameQuery.ANIMATION_HORIZONTAL,
     numberOfFrame: 8,
     delta:         64,
