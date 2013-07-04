@@ -106,8 +106,20 @@ var map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 
 // $('TODO:select the playground here').playground({height: 64, width: 350});
 //
+function GetURLParameter(sParam) {
+  var sPageURL = window.location.search.substring(1);
+  var sURLVariables = sPageURL.split('&');
+  for (var i = 0; i < sURLVariables.length; i++) {
+    var sParameterName = sURLVariables[i].split('=');
+    if (sParameterName[0] == sParam) {
+      return sParameterName[1];
+    }
+  }
+};
+
+var GamePort = GetURLParameter('gameport');
 // start of socket connection
-socket = io.connect("http://192.168.5.38", {port: 3000, transports: ["websocket"]});
+socket = io.connect("http://192.168.5.38", {port: GamePort, transports: ["websocket"]});
 
 $.playground()
   //start the game

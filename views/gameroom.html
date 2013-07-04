@@ -2,8 +2,42 @@
   <head>
   <title>Modia - Game Room</title>
     <script src="./javascripts/jquery.min.js"></script>
-    <script src="http://192.168.5.38:3000/socket.io/socket.io.js"></script>
+    <script src="http://192.168.5.38:5000/socket.io/socket.io.js"></script>
+    <script src="./javascripts/gameroom_client.js"></script>
+  <style>
+    .rounded-corners (@radius: 5px) {
+      border-radius: @radius;
+      -webkit-border-radius: @radius;
+      -moz-border-radius: @radius;
+    }
+    #players {
+      float: left;
+      border-style:solid;
+      .rounded-corners;
+      margin-left: 20px;
+      height: 400px;
+      width: 200px;
+    }
+    #chatwindow {
+      float: left;
+      border-style:solid;
+      .rounded-corners;
+      margin-left: 50px;
+      height: 400px;
+      width: 400px;
+      overflow: auto;
+    }
+    td {
+      padding: 0.5em 1em;
+    }
+  </style>
   </head>
   <body>
+    <div id='chatwindow' class='rounded-corners'>
+      <h2>Chat</h1>
+    </div>
+    <div id='players' class='rounded-corners'>
+      <h2>Players</h1>
+    </div>
   </body>
 </html>
