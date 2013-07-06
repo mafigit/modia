@@ -135,7 +135,7 @@ app.get('/login', function(req, res) {
   });
 });
 
-app.get('/gameroom', ensureAuthenticated, function(req, res) {
+app.get('/gameroom', /*ensureAuthenticated,*/ function(req, res) {
   fs.readFile('./views/gameroom.html', function(error, content) {
     if (error) {
       res.writeHead(500);

@@ -17,7 +17,8 @@ module.exports =  function Chatroom(port){
   };
 
   function onJoin(data)  {
-    this.broadcast.emit("player joined", "blafoo");
+    var user = data;
+    this.broadcast.emit("player joined", user);
   };
 
   function init() {

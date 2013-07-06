@@ -119,7 +119,7 @@ function GetURLParameter(sParam) {
 
 var GamePort = GetURLParameter('gameport');
 // start of socket connection
-socket = io.connect("http://192.168.5.38", {port: GamePort, transports: ["websocket"]});
+socket = io.connect("http://127.0.0.1", {port: GamePort, transports: ["websocket"]});
 
 $.playground()
   //start the game
