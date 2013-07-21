@@ -89,7 +89,20 @@ function addUser(newUsername, newPassword) {
         "\npassword: " + newPassword);
     });
     mongoose.connection.close();
-    console.log(newuser);
+  });
+};
+
+function findByUserid (userid, fn) {
+  mongoose.connect('mongodb://localhost/test');
+  var db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+
+  db.once('open', function callback () {
+    User.find({'_id' : userid}, function(err,users) {
+      var instance = users[0];
+      mongoose.connection.close();
+      return fn(null, instance);
+    });
   });
 };
 
@@ -106,7 +119,7 @@ app.get('/', ensureAuthenticated, function(req, res) {
 });
 
 // routes
-app.get('/form', function(req, res) {
+app.get('/signup', function(req, res) {
   fs.readFile('./views/form.html', function(error, content) {
     if (error) {
       res.writeHead(500);
@@ -135,12 +148,25 @@ app.get('/login', function(req, res) {
   });
 });
 
-app.get('/gameroom', /*ensureAuthenticated,*/ function(req, res) {
+function prettyJSON(obj) {
+  return JSON.stringify(obj.username, null, 2);
+}
+
+app.get('/getusername', ensureAuthenticated, function(req, res) {
+  var userid = req.session.passport.user;
+  findByUserid(userid, function(err, user) {
+    res.writeHead(200, { 'Content-Type':'text/html' });
+    res.end(prettyJSON(user), 'utf-8');
+  });
+});
+
+app.get('/gameroom', ensureAuthenticated, function(req, res) {
   fs.readFile('./views/gameroom.html', function(error, content) {
     if (error) {
       res.writeHead(500);
       res.end();
     } else {
+      util.log(util.inspect(req.session.passport.user));
       res.writeHead(200, { 'Content-Type':'text/html' });
       res.end(content, 'utf-8');
     }
@@ -151,7 +177,7 @@ app.get('/gameroom', /*ensureAuthenticated,*/ function(req, res) {
 app.post('/login',
   passport.authenticate('local', {failureRedirect: '/login'}),
   function(req, res) {
-  res.redirect('/gameroom');
+  res.redirect('/getusername');
 });
 
 app.get('/game', function(req, res) {
@@ -170,7 +196,7 @@ app.post('/signup', function(req, res) {
   var username = req.body.username;
   var password = req.body.password;
   addUser(username, password);
-  res.redirect('/form');
+  res.redirect('/login');
 });
 
 // routes
