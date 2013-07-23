@@ -177,7 +177,7 @@ app.get('/gameroom', ensureAuthenticated, function(req, res) {
 app.post('/login',
   passport.authenticate('local', {failureRedirect: '/login'}),
   function(req, res) {
-  res.redirect('/getusername');
+  res.redirect('/gameroom');
 });
 
 app.get('/game', function(req, res) {
