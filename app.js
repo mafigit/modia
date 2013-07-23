@@ -30,6 +30,7 @@ var userschema = new mongoose.Schema({
 });
 var User = mongoose.model('user', userschema);
 
+// Test
 function findById (id, fn) {
   var user = {id: 1, username: 'bob', password: 'secret', email: 'bob@example.com'};
   return fn(null, user);
