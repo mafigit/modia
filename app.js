@@ -49,7 +49,7 @@ function findByUsername (username, fn) {
   });
 };
 
-// User session handling
+// Usersession handling
 passport.use(new LocalStrategy(
   function(username, password, done) {
     process.nextTick(function () {
