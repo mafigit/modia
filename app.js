@@ -35,6 +35,7 @@ function findById (id, fn) {
   return fn(null, user);
 };
 
+// returns user object by finding username by username
 function findByUsername (username, fn) {
   mongoose.connect('mongodb://localhost/test');
   var db = mongoose.connection;
