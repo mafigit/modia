@@ -15,29 +15,52 @@
       border-style:solid;
       .rounded-corners;
       margin-left: 20px;
-      height: 400px;
-      width: 200px;
+      overflow: auto;
+      height: 95%;
+      width: 20%;
+    }
+    #chatprompt {
+      border-style:solid;
+      .rounded-corners;
+      height: 30px;
+      width: 70%;
+      clear: both;
+      float: left;
+      margin-left: 50px;
     }
     #chatwindow {
       float: left;
+      overflow: auto;
       border-style:solid;
       .rounded-corners;
       margin-left: 50px;
-      height: 400px;
-      width: 400px;
+      height: 90%;
+      width: 70%;
       overflow: auto;
+      white-space: wrap;
     }
     td {
       padding: 0.5em 1em;
+    }
+    .chat_username {
+      margin-right: 4px;
+      font-weight: bold;
+    }
+    .chat_message {
+      margin-right: 4px;
+    }
+    .chat_timestamp {
+      margin-right: 8px;
     }
   </style>
   </head>
   <body>
     <div id='chatwindow' class='rounded-corners'>
-      <h2>Chat</h1>
     </div>
     <div id='players' class='rounded-corners'>
       <h2>Players</h1>
     </div>
+    <input id='chatprompt'>
+    </input>
   </body>
 </html>

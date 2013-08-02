@@ -10,6 +10,7 @@
     "jade": "*",
     "mongoose": "*",
     "passport": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "escape-html": "*"
   }
 }
