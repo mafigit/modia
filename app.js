@@ -12,6 +12,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
+//XXX: only for development
 app.use(express.session({ secret: 'Keyboard cat' }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -30,7 +31,7 @@ var userschema = new mongoose.Schema({
 });
 var User = mongoose.model('user', userschema);
 
-// Test
+//XXX: only for development
 function findById (id, fn) {
   var user = {id: 1, username: 'bob', password: 'secret', email: 'bob@example.com'};
   return fn(null, user);
