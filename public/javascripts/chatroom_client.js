@@ -62,7 +62,7 @@ $(function() {
   //get username with session
   getusername();
 
-  socket = io.connect("http://127.0.0.1", {port: 5000, transports: ["websocket"]});
+  socket = io.connect("http://192.168.245.107", {port: 5000, transports: ["websocket"]});
 
   socket.emit('getplayers');
 

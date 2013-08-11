@@ -151,8 +151,8 @@ app.get('/login', function(req, res) {
   });
 });
 
-function prettyJSON(obj) {
-  return JSON.stringify(obj.username, null, 2);
+function prettyJSON(user) {
+  return JSON.stringify(user.username, null, 2);
 }
 
 app.get('/getusername', ensureAuthenticated, function(req, res) {
